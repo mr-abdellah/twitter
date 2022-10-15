@@ -1,9 +1,34 @@
 import React from "react";
+import SidebarRow from "./../SidebarRow/SidebarRow";
+import {
+  BellIcon,
+  HashtagIcon,
+  BookmarkIcon,
+  EllipsisHorizontalCircleIcon,
+  EnvelopeIcon,
+  UserIcon,
+  HomeIcon,
+  RectangleStackIcon,
+} from "@heroicons/react/24/outline";
 
-type Props = {};
-
-function Sidebar({}: Props) {
-  return <div>Sidebar</div>;
+function Sidebar() {
+  return (
+    <div className="flex flex-col">
+      <img
+        className="h-10 w-10"
+        src="https://img.icons8.com/color/344/twitter.png"
+        alt=""
+      />
+      <SidebarRow Icon={HomeIcon} title="Home" />
+      <SidebarRow Icon={HashtagIcon} title="Explore" />
+      <SidebarRow Icon={BellIcon} title="Notifications" />
+      <SidebarRow Icon={EnvelopeIcon} title="Messages" />
+      <SidebarRow Icon={BookmarkIcon} title="Bookmarks" />
+      <SidebarRow Icon={RectangleStackIcon} title="Lists" />
+      <SidebarRow Icon={UserIcon} title="Sign In" />
+      <SidebarRow Icon={EllipsisHorizontalCircleIcon} title="More" />
+    </div>
+  );
 }
 
 export default Sidebar;
