@@ -13,9 +13,9 @@ import {
 
 function Sidebar() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col col-span-2 items-center px-4 md:items-start">
       <img
-        className="h-10 w-10"
+        className="h-10 w-10 m-3"
         src="https://img.icons8.com/color/344/twitter.png"
         alt=""
       />

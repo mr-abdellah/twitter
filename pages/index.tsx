@@ -1,11 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import Feed from "../components/Feed/Feed";
 import Sidebar from "../components/Sidebar/Sidebar";
+import Widget from "../components/Widget/Widget";
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <div className="mx-auto max-h-screen overflow-hidden lg:max-w-6xl ">
       <Head>
         <title>Twitter</title>
         <link
@@ -14,11 +16,10 @@ const Home: NextPage = () => {
         />
       </Head>
 
-      <main>
-        {/* Sidebar */}
+      <main className="grid grid-cols-9">
         <Sidebar />
-        {/* Feed */}
-        {/* Widgets */}
+        <Feed />
+        <Widget />
       </main>
     </div>
   );
