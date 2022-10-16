@@ -7,9 +7,14 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.12",
+    "@portabletext/react": "^1.0.6",
+    "@sanity/image-url": "^1.0.1",
+    "javascript-time-ago": "^2.5.7",
     "next": "latest",
+    "next-sanity": "^1.0.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "react-time-ago": "^7.2.1",
     "react-twitter-embed": "^4.0.4"
   },
   "devDependencies": {
