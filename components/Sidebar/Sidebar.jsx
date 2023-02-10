@@ -13,7 +13,6 @@ import {
 } from "@heroicons/react/24/outline";
 import AuthModal from "../Auth";
 import { AuthContext } from "../../context/AuthContext";
-import Link from "next/link";
 
 const Sidebar = () => {
   const [openLoginModal, setOpenLoginModal] = useState(false);
