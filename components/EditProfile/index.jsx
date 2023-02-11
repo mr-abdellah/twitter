@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import {
   ArrowPathIcon,
@@ -7,52 +7,52 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Avatar, Button, TextField } from "@mui/material";
-import handleUpdateProfile from "../../utils/UpdateProfile";
 import handleSelectImage from "../../utils/ImagePicker";
 import handleUploadImage from "../../utils/UploadImage";
 import { auth } from "../../config/firebase";
 import { updateProfile } from "firebase/auth";
+import { Controller, useForm } from "react-hook-form";
+import InputComponent from "../Input/InputComponent";
+
 const index = () => {
-  const { user, updateUserCollection } = useContext(AuthContext);
-  const [coverImage, setCoverImage] = useState(null);
-  const [profileImage, setProfileImage] = useState(null);
+  const { user, updateUserCollection, getUserCollection } =
+    useContext(AuthContext);
 
-  const [name, setName] = useState(null);
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+    register,
+    reset,
+  } = useForm({
+    defaultValues: user,
+  });
 
-  const [username, setUsername] = useState(null);
+  useEffect(() => {
+    if (user) reset(user);
+  }, [user]);
 
-  const [bio, setBio] = useState(null);
-
-  const [location, setLocation] = useState(null);
-
-  const [website, setWebsite] = useState(null);
-
-  const update = async (
-    profileImage,
-    coverImage,
-    name,
-    username,
-    bio,
-    location,
-    website
-  ) => {
+  const onSubmit = async (data) => {
+    console.log("profile data : ", data);
     try {
-      const profileImglink = profileImage
-        ? await handleUploadImage(profileImage)
-        : null;
-      const coverImglink = coverImage
-        ? await handleUploadImage(coverImage)
-        : null;
+      const profileImglink =
+        data.profileImage !== user?.profileImage
+          ? await handleUploadImage(data.profileImage[0])
+          : user?.profileImage;
 
-      console.log("profile img link", profileImglink);
+      const coverImglink =
+        data.coverImage !== user?.coverImage
+          ? await handleUploadImage(data.coverImage[0])
+          : user?.coverImage;
+
       await updateUserCollection({
         profileImage: profileImglink,
-        name: name ? name : null,
         coverImage: coverImglink,
-        username: username ? username : null,
-        bio: bio ? bio : null,
-        location: location ? location : null,
-        website: website ? website : null,
+        name: data.name ? data.name : user?.name,
+        username: data.username ? data.username : user?.username,
+        bio: data.bio ? data.bio : user?.bio,
+        location: data.location ? data.location : user?.location,
+        website: data.website ? data.website : user?.website,
       });
       await updateProfile(auth.currentUser, {
         name: auth.currentUser.name === name ? user.name : name,
@@ -64,7 +64,7 @@ const index = () => {
       console.log("error while updating profile", error);
     }
   };
-  console.log(user);
+
   return (
     <div className="col-span-7 lg:col-span-5 lg:border-x relative">
       <div className="sticky flex items-center justify-between h-10 overflow-hidden text-ellipsis mt-2 mx-3">
@@ -75,18 +75,7 @@ const index = () => {
           Edit Profile
         </h1>
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            update(
-              profileImage,
-              coverImage,
-              name,
-              username,
-              bio,
-              location,
-              website
-            );
-          }}
+          onClick={handleSubmit(onSubmit)}
           className="bg-black text-white px-3 py-1 rounded-xl"
         >
           Save
@@ -106,12 +95,12 @@ const index = () => {
             name=""
             id=""
             className="opacity-0"
-            onChange={(e) => handleSelectImage(e, setCoverImage)}
+            {...register("coverImage")}
           />
         </div>
         <div className="absolute -bottom-10">
           <Avatar
-            src={user?.photoURL}
+            src={user?.profileImage}
             className=" border-white border-2 w-16 h-16 md:w-28 md:h-28"
           />
           <div className="h-6 w-6 absolute top-[50%] bottom-[50%] left-[50%] right-[50%]  md:h-8 md:w-8 cursor-pointer flex flex-no-shrink justify-center items-center bg-gray-500 rounded-full box-content">
@@ -121,48 +110,18 @@ const index = () => {
               name=""
               id=""
               className="opacity-0 z-0"
-              onChange={(e) => handleSelectImage(e, setProfileImage)}
+              {...register("profileImage")}
             />
           </div>
         </div>
       </div>
 
       <div className="relative mt-16 space-y-3 w-[95%] flex flex-col justify-center items-center mx-auto">
-        <TextField
-          id="outlined-basic"
-          label="Name"
-          variant="outlined"
-          className="w-full"
-          onChange={(e) => setName(e.target.value)}
-        />
-        <TextField
-          id="outlined-basic"
-          label="Username"
-          variant="outlined"
-          className="w-full"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <TextField
-          id="outlined-basic"
-          label="Bio"
-          variant="outlined"
-          className="w-full"
-          onChange={(e) => setBio(e.target.value)}
-        />
-        <TextField
-          id="outlined-basic"
-          label="Location"
-          variant="outlined"
-          className="w-full"
-          onChange={(e) => setLocation(e.target.value)}
-        />
-        <TextField
-          id="outlined-basic"
-          label="Website"
-          variant="outlined"
-          className="w-full"
-          onChange={(e) => setWebsite(e.target.value)}
-        />
+        <InputComponent name="name" control={control} label="Name" />
+        <InputComponent name="username" control={control} label="Username" />
+        <InputComponent name="bio" control={control} label="Bio" />
+        <InputComponent name="location" control={control} label="Location" />
+        <InputComponent name="website" control={control} label="Website" />
       </div>
     </div>
   );

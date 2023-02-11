@@ -7,7 +7,7 @@ import { Avatar, Button } from "@mui/material";
 const Profile = () => {
   const { user } = useContext(AuthContext);
 
-
+  console.log("user data : ", user);
 
   return (
     <div className="col-span-7 lg:col-span-5 lg:border-x relative">
@@ -16,18 +16,18 @@ const Profile = () => {
           <ArrowLeftIcon className="w-full h-full" />
         </Link>
         <h1 className="text-xs w-[75%] md:text-lg font-bold whitespace-nowrap text-ellipsis">
-          {user?.displayName}
+          {user?.name}
         </h1>
       </div>
 
       <div className="relative">
         <img
           src={user?.coverImage}
-          alt={`${user?.displayName} cover image`}
+          alt={`${user?.name} cover image`}
           className="h-28 md:h-52 w-full object-cover"
         />
         <Avatar
-          src={user?.photoURL}
+          src={user?.profileImage}
           className="absolute -bottom-10 left-5 border-white border-2 w-16 h-16 md:w-28 md:h-28"
         />
         <Link
@@ -39,10 +39,12 @@ const Profile = () => {
       </div>
 
       <div className="relative top-16">
-        <h1 className="font-bold">{user?.displayName}</h1>
+        <h1 className="font-bold">{user?.name}</h1>
         <p className="text-twitterGray">@{user?.username}</p>
-        <p className="">@{user?.profileDescription}</p>
-        <p className="text-twitterGray">@{user?.profileCategory}</p>
+        <p className="">@{user?.bio}</p>
+        {user?.profileCategory && (
+          <p className="text-twitterGray">@{user?.profileCategory}</p>
+        )}
         <p className="text-twitterGray">@{user?.location}</p>
       </div>
     </div>

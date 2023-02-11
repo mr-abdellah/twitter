@@ -6,12 +6,23 @@ import {
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+  orderBy,
+  arrayRemove,
+  arrayUnion,
+} from "firebase/firestore";
 import RegisterFunction from "../utils/register";
 import LoginFunction from "../utils/login";
 import toastAlert from "../utils/Notification";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addTweets } from "../redux/slices/tweets";
 
 export const AuthContext = createContext();
@@ -20,6 +31,8 @@ const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
   const [user, setUser] = useState(null);
   const dispatch = useDispatch();
+
+  const { tweets } = useSelector((state) => state.tweets);
 
   const signup = async (email, password) => {
     setIsLoading(true);
@@ -88,6 +101,7 @@ const AuthProvider = ({ children }) => {
       .then(() => {
         setIsLoading(true);
         setUserToken(null);
+        setUser(null);
         localStorage.removeItem("twitterAbdellahToken");
         setIsLoading(false);
       })
@@ -110,14 +124,16 @@ const AuthProvider = ({ children }) => {
       setIsLoading(true);
       setUserToken(localStorage.getItem("twitterAbdellahToken"));
       setIsLoading(false);
+      return true;
     } catch (error) {
       console.log("error while checking if user is logged in", error.message);
+      return false;
     }
   };
 
   const getUserCollection = async () => {
-    try {
-      if (auth.currentUser.uid) {
+    if (auth?.currentUser?.uid) {
+      try {
         const q = query(
           collection(db, "users"),
           where("id", "==", auth.currentUser.uid)
@@ -130,32 +146,122 @@ const AuthProvider = ({ children }) => {
           setUser({ ...data, referenceId: doc.id });
           //
         });
+      } catch (error) {
+        console.log("error while getting user collection", error.message);
       }
-    } catch (error) {
-      console.log("error while getting user collection", error.message);
     }
   };
 
   const getAllTweets = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, "tweets"));
+      const q = query(collection(db, "tweets"), orderBy("created_at", "desc"));
+
+      const querySnapshot = await getDocs(q);
       const data = [];
       querySnapshot.forEach((doc) => {
         data.push({ ...doc.data(), referenceId: doc.id });
       });
       dispatch(addTweets(data));
       // console.log("test", data.length);
-    } catch (error) {}
+    } catch (error) {
+      console.log("error while getting tweets", error.message);
+    }
   };
 
   const updateUserCollection = async (arg) => {
+    console.log("updating user : ", user);
     try {
+      const id = toast.loading("Updating...");
       await updateDoc(doc(db, "users", user?.referenceId), {
         ...user,
         ...arg,
       });
+      toast.update(id, {
+        render: "You have updated your account successfully",
+        type: "success",
+        isLoading: false,
+        autoClose: true,
+        closeOnClick: true,
+      });
       await getUserCollection();
-    } catch (error) {}
+    } catch (error) {
+      console.log("error while updating user collection", error);
+      toast.update(id, {
+        render: `Error while updating your profile : ${error}`,
+        type: "error",
+        isLoading: false,
+        autoClose: true,
+        closeOnClick: true,
+      });
+    }
+  };
+
+  const likeTweet = async (referenceId, id, tweetID) => {
+    getAllTweets();
+    const tweet = tweets.find((item) => item?.referenceId === referenceId);
+
+    const q = query(
+      collection(db, "users"),
+      where("id", "==", auth?.currentUser?.uid)
+    );
+
+    const querySnapshot = await getDocs(q);
+    let userReferenceID;
+    querySnapshot.forEach((doc) => {
+      userReferenceID = doc.id;
+      console.log("user reference", doc.id);
+      //
+    });
+    const tweetReference = doc(db, "tweets", referenceId);
+    const userReference = doc(db, "users", userReferenceID);
+
+    try {
+      const check = tweet?.likes?.includes(id);
+      if (check) {
+        await updateDoc(tweetReference, {
+          likes: arrayRemove(id),
+        })
+          .then(() => {
+            console.log("unliked");
+            getAllTweets();
+          })
+          .catch((e) =>
+            console.log("error while unliking tweet : ", e.message)
+          );
+        await updateDoc(userReference, {
+          likedTweets: arrayRemove(tweetID),
+        })
+          .then(() => {
+            console.log("removed tweet from user");
+            getAllTweets();
+          })
+          .catch((e) =>
+            console.log("error while removing tweet from user", e.message)
+          );
+      }
+      if (!check) {
+        await updateDoc(tweetReference, {
+          likes: arrayUnion(id),
+        })
+          .then(() => {
+            console.log("liked");
+            getAllTweets();
+          })
+          .catch(() => console.log("error while liking tweet"));
+
+        await updateDoc(userReference, {
+          likedTweets: arrayUnion(tweetID),
+        })
+          .then(() => {
+            console.log("added tweet to user");
+          })
+          .catch((error) =>
+            console.log("error while adding tweet to user", error)
+          );
+      }
+    } catch (error) {
+      console.log("error in like functionality", error);
+    }
   };
 
   useEffect(() => {
@@ -191,10 +297,13 @@ const AuthProvider = ({ children }) => {
         login,
         logout,
         signup,
+        isLoggedIn,
         user,
         isLoading,
         userToken,
         updateUserCollection,
+        getAllTweets,
+        likeTweet,
       }}
     >
       {children}

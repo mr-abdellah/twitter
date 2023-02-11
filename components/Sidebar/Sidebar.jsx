@@ -29,12 +29,7 @@ const Sidebar = () => {
         src="https://img.icons8.com/color/344/twitter.png"
         alt=""
       />
-      <SidebarRow Icon={HomeIcon} title="Home" />
-      <SidebarRow Icon={HashtagIcon} title="Explore" />
-      <SidebarRow Icon={BellIcon} title="Notifications" />
-      <SidebarRow Icon={EnvelopeIcon} title="Messages" />
-      <SidebarRow Icon={BookmarkIcon} title="Bookmarks" />
-      <SidebarRow Icon={RectangleStackIcon} title="Lists" />
+
       {userToken === null ? (
         <SidebarRow
           Icon={UserIcon}
@@ -42,12 +37,20 @@ const Sidebar = () => {
           onclick={() => setOpenLoginModal(!openLoginModal)}
         />
       ) : (
-        <SidebarRow
-          Icon={UserIcon}
-          title="Account"
-          // onclick={() => setProfileModal(!profileModal)}
-          href="/profile"
-        />
+        <>
+          <SidebarRow Icon={HomeIcon} title="Home" />
+          <SidebarRow Icon={HashtagIcon} title="Explore" />
+          <SidebarRow Icon={BellIcon} title="Notifications" />
+          <SidebarRow Icon={EnvelopeIcon} title="Messages" />
+          <SidebarRow Icon={BookmarkIcon} title="Bookmarks" />
+          <SidebarRow Icon={RectangleStackIcon} title="Lists" />
+          <SidebarRow
+            Icon={UserIcon}
+            title="Account"
+            // onclick={() => setProfileModal(!profileModal)}
+            href="/profile"
+          />
+        </>
       )}
       <SidebarRow Icon={EllipsisHorizontalCircleIcon} title="More" />
       {userToken && (

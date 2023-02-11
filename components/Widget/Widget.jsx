@@ -14,11 +14,11 @@ function Widget({}) {
           className="bg-transparent flex-1 outline-none"
         />
       </div>
-      <TwitterTimelineEmbed
+      {/* <TwitterTimelineEmbed
         sourceType="profile"
         screenName="belkaiduus"
         options={{ height: 1000 }}
-      />
+      /> */}
     </div>
   );
 }
