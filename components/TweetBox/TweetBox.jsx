@@ -22,7 +22,7 @@ export default function TweetBox({}) {
   const [sharing, setSharing] = useState(false);
   const [open, setOpen] = useState(false);
   return (
-    <div className="flex flex-col space-x-2 p-5 ">
+    <div className="flex flex-col space-x-2 p-5 w-full">
       <div className="flex items-center">
         <Avatar src={user?.profileImage} />
         <input

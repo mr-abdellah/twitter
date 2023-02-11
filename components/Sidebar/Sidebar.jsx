@@ -23,7 +23,7 @@ const Sidebar = () => {
   const { userToken, user, logout } = useContext(AuthContext);
 
   return (
-    <div className="flex flex-col col-span-2 items-center px-4 md:items-start">
+    <div className="flex flex-col col-span-2 items-center px-4 md:items-start h-full">
       <img
         className="h-10 w-10 m-3"
         src="https://img.icons8.com/color/344/twitter.png"
