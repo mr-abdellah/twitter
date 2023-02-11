@@ -4,7 +4,7 @@ import React, { SVGProps } from "react";
 const SidebarRow = ({ Icon, title, onclick, img = null, href }) => {
   return (
     <>
-      {img ? (
+      {!Icon ? (
         <Link
           href={href ? href : "/"}
           onClick={onclick}

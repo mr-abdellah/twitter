@@ -11,12 +11,15 @@ import RegisterFunction from "../utils/register";
 import LoginFunction from "../utils/login";
 import toastAlert from "../utils/Notification";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { addTweets } from "../redux/slices/tweets";
 
 export const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
   const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
 
   const signup = async (email, password) => {
     setIsLoading(true);
@@ -133,6 +136,28 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const getAllTweets = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "tweets"));
+      const data = [];
+      querySnapshot.forEach((doc) => {
+        data.push({ ...doc.data(), referenceId: doc.id });
+      });
+      dispatch(addTweets(data));
+      // console.log("test", data.length);
+    } catch (error) {}
+  };
+
+  const updateUserCollection = async (arg) => {
+    try {
+      await updateDoc(doc(db, "users", user?.referenceId), {
+        ...user,
+        ...arg,
+      });
+      await getUserCollection();
+    } catch (error) {}
+  };
+
   useEffect(() => {
     getUserCollection();
   }, [userToken]);
@@ -140,6 +165,10 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     isLoggedIn();
   }, [user]);
+
+  useEffect(() => {
+    getAllTweets();
+  }, []);
 
   useEffect(() => {
     const unsubscribeFromAuthStateChanged = onAuthStateChanged(auth, (user) => {
@@ -165,6 +194,7 @@ const AuthProvider = ({ children }) => {
         user,
         isLoading,
         userToken,
+        updateUserCollection,
       }}
     >
       {children}

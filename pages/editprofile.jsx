@@ -1,13 +1,12 @@
 import Head from "next/head";
 import Wrapper from "../components/Wrapper";
-import Feed from "../components/Feed/Feed";
+import EditProfile from "../components/EditProfile";
 
-const Home = ({ tweets }) => {
-
+const editProfile = () => {
   return (
     <div className="mx-auto  lg:max-w-6xl h-screen">
       <Head>
-        <title>Twitter</title>
+        <title>Edit Profile</title>
         <link
           rel="icon"
           href="https://img.icons8.com/color/344/twitter--v1.png"
@@ -15,20 +14,10 @@ const Home = ({ tweets }) => {
       </Head>
 
       <Wrapper>
-        <Feed />
+        <EditProfile />
       </Wrapper>
     </div>
   );
 };
 
-export default Home;
-
-export const getServerSideProps = async (context) => {
-  const tweets = [];
-
-  return {
-    props: {
-      tweets,
-    },
-  };
-};
+export default editProfile;

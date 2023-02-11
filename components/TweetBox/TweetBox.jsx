@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import {
   CalendarIcon,
@@ -7,18 +7,23 @@ import {
   PhotoIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import handleSelectImage from "../../utils/ImagePicker";
+import handleShareTweet from "../../utils/ShareTweet";
+import { AuthContext } from "../../context/AuthContext";
+import { Avatar } from "@mui/material";
 
 export default function TweetBox({}) {
   const [input, setInput] = useState("");
+  const [image, setImage] = useState(null);
+
+  image && console.table("image :", image);
+
+  const { user } = useContext(AuthContext);
 
   return (
     <div className="flex flex-col space-x-2 p-5 ">
       <div className="flex items-center">
-        <img
-          className="h-8 w-8 md:h-14 md:w-14 rounded-full object-cover"
-          src="https://avatars.githubusercontent.com/u/98021746?v=4"
-          alt=""
-        />
+        <Avatar src={user?.photoURL} />
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -30,16 +35,30 @@ export default function TweetBox({}) {
       <div className="flex items-center">
         <div className="flex flex-1 items-center space-x-2 text-twitter">
           {/* icons */}
-          <PhotoIcon className="h-5 w-5 cursor-pointer transition-transform duration-150 ease-out hover:scale-150" />
-          <MagnifyingGlassIcon className="h-5 w-5 cursor-pointer transition-transform duration-150 ease-out hover:scale-150" />
-          <FaceSmileIcon className="h-5 w-5 cursor-pointer transition-transform duration-150 ease-out hover:scale-150" />
-          <CalendarIcon className="h-5 w-5 cursor-pointer transition-transform duration-150 ease-out hover:scale-150" />
-          <MapPinIcon className="h-5 w-5 cursor-pointer transition-transform duration-150 ease-out hover:scale-150" />
+          <div className="h-5 w-5 relative overflow-hidden ">
+            <input
+              type="file"
+              name=""
+              id=""
+              onChange={(e) => {
+                handleSelectImage(e, setImage);
+              }}
+              className="opacity-0 absolute cursor-pointer z-20"
+            />
+            <PhotoIcon className=" w-full h-full" />
+          </div>
+          {/* <MagnifyingGlassIcon className="h-5 w-5 cursor-pointer " /> */}
+          <FaceSmileIcon className="h-5 w-5 cursor-pointer " />
+          <CalendarIcon className="h-5 w-5 cursor-pointer " />
+          <MapPinIcon className="h-5 w-5 cursor-pointer " />
         </div>
 
         <button
           disabled={!input}
           className="bg-twitter text-white px-3 py-1 md:px-5 md:py-2 font-normal rounded-full disabled:opacity-40"
+          onClick={() => {
+            handleShareTweet(image, input);
+          }}
         >
           Tweet
         </button>

@@ -2,8 +2,12 @@ import React from "react";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import TweetBox from "../TweetBox/TweetBox";
 import TweetComponent from "../Tweet/Tweet";
+import { useSelector } from "react-redux";
 
-export default function Feed({ tweets }) {
+export default function Feed() {
+  const { tweets } = useSelector((state) => state.tweets);
+
+
   return (
     <div className="col-span-7 lg:col-span-5 lg:border-x">
       <div className="flex items-center justify-between">

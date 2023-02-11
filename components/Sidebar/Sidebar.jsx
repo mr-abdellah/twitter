@@ -11,15 +11,16 @@ import {
   RectangleStackIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import AuthModal from "../Auth";
 import { AuthContext } from "../../context/AuthContext";
+import AuthModal from "../Auth";
+import ProfileModal from "../ProfileModal";
 
 const Sidebar = () => {
   const [openLoginModal, setOpenLoginModal] = useState(false);
 
-  const { userToken, user, logout } = useContext(AuthContext);
+  const [profileModal, setProfileModal] = useState(false);
 
-  console.log("user : ", user);
+  const { userToken, user, logout } = useContext(AuthContext);
 
   return (
     <div className="flex flex-col col-span-2 items-center px-4 md:items-start">
@@ -44,19 +45,22 @@ const Sidebar = () => {
         <SidebarRow
           Icon={UserIcon}
           title="Account"
-          img={user?.photoURL}
+          // onclick={() => setProfileModal(!profileModal)}
           href="/profile"
         />
       )}
       <SidebarRow Icon={EllipsisHorizontalCircleIcon} title="More" />
-      <SidebarRow
-        Icon={ArrowLeftOnRectangleIcon}
-        title="Logout"
-        onclick={() => {
-          logout();
-        }}
-      />
+      {userToken && (
+        <SidebarRow
+          Icon={ArrowLeftOnRectangleIcon}
+          title="Logout"
+          onclick={() => {
+            logout();
+          }}
+        />
+      )}
       <AuthModal openModal={openLoginModal} setOpenModal={setOpenLoginModal} />
+      <ProfileModal open={profileModal} setOpen={setProfileModal} />
     </div>
   );
 };
