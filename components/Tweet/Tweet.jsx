@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   ChatBubbleLeftRightIcon,
   ArrowsRightLeftIcon,
@@ -14,13 +14,14 @@ import moment from "moment";
 import { Avatar } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 import { auth } from "../../config/firebase";
+import AuthModal from "../../components/Auth";
 
 const formatter = buildFormatter(englishStrings);
 
 function Tweet({ tweet }) {
-  const { likeTweet } = useContext(AuthContext);
+  const { likeTweet, userToken } = useContext(AuthContext);
 
-  console.log(tweet);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="flex flex-col space-x-3 border-y p-5 border-gray-100 w-full">
@@ -53,18 +54,18 @@ function Tweet({ tweet }) {
           <ChatBubbleLeftRightIcon className="h-5 w-5" />
           <p>{tweet?.comments?.length}</p>
         </div>
-
         {/* <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
           <ArrowsRightLeftIcon className="h-5 w-5" />
         </div> */}
-
         <div
           onClick={() => {
-            likeTweet(
-              tweet?.referenceId,
-              auth?.currentUser?.uid,
-              tweet?.referenceId
-            );
+            userToken
+              ? likeTweet(
+                  tweet?.referenceId,
+                  auth?.currentUser?.uid,
+                  tweet?.referenceId
+                )
+              : setOpen(true);
           }}
           className="flex cursor-pointer items-center space-x-3 text-gray-400"
         >
@@ -75,7 +76,7 @@ function Tweet({ tweet }) {
           )}
           <p>{tweet?.likes?.length}</p>
         </div>
-
+        <AuthModal openModal={open} setOpenModal={setOpen} />
         {/* <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
           <ArrowUpTrayIcon className="h-5 w-5" />
         </div> */}

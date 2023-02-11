@@ -101,6 +101,7 @@ const AuthProvider = ({ children }) => {
       .then(() => {
         setIsLoading(true);
         setUserToken(null);
+        setUser(null);
         localStorage.removeItem("twitterAbdellahToken");
         setIsLoading(false);
       })
@@ -123,8 +124,10 @@ const AuthProvider = ({ children }) => {
       setIsLoading(true);
       setUserToken(localStorage.getItem("twitterAbdellahToken"));
       setIsLoading(false);
+      return true;
     } catch (error) {
       console.log("error while checking if user is logged in", error.message);
+      return false;
     }
   };
 
@@ -294,6 +297,7 @@ const AuthProvider = ({ children }) => {
         login,
         logout,
         signup,
+        isLoggedIn,
         user,
         isLoading,
         userToken,

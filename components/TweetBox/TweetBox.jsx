@@ -11,16 +11,16 @@ import handleSelectImage from "../../utils/ImagePicker";
 import handleShareTweet from "../../utils/ShareTweet";
 import { AuthContext } from "../../context/AuthContext";
 import { Avatar } from "@mui/material";
+import AuthModal from "../../components/Auth";
 
 export default function TweetBox({}) {
   const [input, setInput] = useState("");
   const [image, setImage] = useState(null);
 
-  const { user, getAllTweets } = useContext(AuthContext);
-  console.log("image :", user);
+  const { user, getAllTweets, userToken } = useContext(AuthContext);
 
   const [sharing, setSharing] = useState(false);
-
+  const [open, setOpen] = useState(false);
   return (
     <div className="flex flex-col space-x-2 p-5 ">
       <div className="flex items-center">
@@ -55,25 +55,30 @@ export default function TweetBox({}) {
         </div>
 
         <button
-          disabled={!input || sharing}
+          disabled={!input || sharing || !userToken}
           className="bg-twitter text-white px-3 py-1 md:px-5 md:py-2 font-normal rounded-full disabled:opacity-40"
           onClick={() => {
-            handleShareTweet(
-              setSharing,
-              image,
-              input,
-              user?.name,
-              user?.username,
-              user?.profileImage
-            );
-            getAllTweets();
-            setInput("");
-            setImage(null);
+            if (userToken) {
+              handleShareTweet(
+                setSharing,
+                image,
+                input,
+                user?.name,
+                user?.username,
+                user?.profileImage
+              );
+              getAllTweets();
+              setInput("");
+              setImage(null);
+            } else {
+              setOpen(true);
+            }
           }}
         >
           Tweet
         </button>
       </div>
+      <AuthModal openModal={open} setOpenModal={setOpen} />
     </div>
   );
 }
