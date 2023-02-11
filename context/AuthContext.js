@@ -6,7 +6,16 @@ import {
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+  orderBy,
+} from "firebase/firestore";
 import RegisterFunction from "../utils/register";
 import LoginFunction from "../utils/login";
 import toastAlert from "../utils/Notification";
@@ -116,8 +125,8 @@ const AuthProvider = ({ children }) => {
   };
 
   const getUserCollection = async () => {
-    try {
-      if (auth.currentUser.uid) {
+    if (auth?.currentUser?.uid) {
+      try {
         const q = query(
           collection(db, "users"),
           where("id", "==", auth.currentUser.uid)
@@ -130,32 +139,54 @@ const AuthProvider = ({ children }) => {
           setUser({ ...data, referenceId: doc.id });
           //
         });
+      } catch (error) {
+        console.log("error while getting user collection", error.message);
       }
-    } catch (error) {
-      console.log("error while getting user collection", error.message);
     }
   };
 
   const getAllTweets = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, "tweets"));
+      const q = query(collection(db, "tweets"), orderBy("created_at", "desc"));
+
+      const querySnapshot = await getDocs(q);
       const data = [];
       querySnapshot.forEach((doc) => {
         data.push({ ...doc.data(), referenceId: doc.id });
       });
       dispatch(addTweets(data));
       // console.log("test", data.length);
-    } catch (error) {}
+    } catch (error) {
+      console.log("error while getting tweets", error.message);
+    }
   };
 
   const updateUserCollection = async (arg) => {
+    console.log("updating user : ", user);
     try {
+      const id = toast.loading("Updating...");
       await updateDoc(doc(db, "users", user?.referenceId), {
         ...user,
         ...arg,
       });
+      toast.update(id, {
+        render: "You have updated your account successfully",
+        type: "success",
+        isLoading: false,
+        autoClose: true,
+        closeOnClick: true,
+      });
       await getUserCollection();
-    } catch (error) {}
+    } catch (error) {
+      console.log("error while updating user collection", error);
+      toast.update(id, {
+        render: `Error while updating your profile : ${error}`,
+        type: "error",
+        isLoading: false,
+        autoClose: true,
+        closeOnClick: true,
+      });
+    }
   };
 
   useEffect(() => {
@@ -195,6 +226,7 @@ const AuthProvider = ({ children }) => {
         isLoading,
         userToken,
         updateUserCollection,
+        getAllTweets,
       }}
     >
       {children}

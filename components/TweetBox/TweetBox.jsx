@@ -16,14 +16,15 @@ export default function TweetBox({}) {
   const [input, setInput] = useState("");
   const [image, setImage] = useState(null);
 
-  image && console.table("image :", image);
+  const { user, getAllTweets } = useContext(AuthContext);
+  console.log("image :", user);
 
-  const { user } = useContext(AuthContext);
+  const [sharing, setSharing] = useState(false);
 
   return (
     <div className="flex flex-col space-x-2 p-5 ">
       <div className="flex items-center">
-        <Avatar src={user?.photoURL} />
+        <Avatar src={user?.profileImage} />
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -54,10 +55,20 @@ export default function TweetBox({}) {
         </div>
 
         <button
-          disabled={!input}
+          disabled={!input || sharing}
           className="bg-twitter text-white px-3 py-1 md:px-5 md:py-2 font-normal rounded-full disabled:opacity-40"
           onClick={() => {
-            handleShareTweet(image, input);
+            handleShareTweet(
+              setSharing,
+              image,
+              input,
+              user?.name,
+              user?.username,
+              user?.profileImage
+            );
+            getAllTweets();
+            setInput("");
+            setImage(null);
           }}
         >
           Tweet
