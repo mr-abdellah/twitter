@@ -274,7 +274,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     getAllTweets();
-  }, [tweets]);
+  }, []);
 
   useEffect(() => {
     const unsubscribeFromAuthStateChanged = onAuthStateChanged(auth, (user) => {

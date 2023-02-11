@@ -23,7 +23,7 @@ function Tweet({ tweet }) {
 
   const [open, setOpen] = useState(false);
 
-  console.log(tweet);
+  // console.log(tweet);
 
   return (
     <div className="flex flex-col space-x-3 border-y px-2 py-3 border-gray-100 w-full md:p-6">
