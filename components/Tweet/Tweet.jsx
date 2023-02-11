@@ -1,20 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   ChatBubbleLeftRightIcon,
   ArrowsRightLeftIcon,
   HeartIcon,
   ArrowUpTrayIcon,
 } from "@heroicons/react/24/outline";
+
+import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
 import TimeAgo from "react-timeago";
 import englishStrings from "react-timeago/lib/language-strings/en";
 import buildFormatter from "react-timeago/lib/formatters/buildFormatter";
 import moment from "moment";
 import { Avatar } from "@mui/material";
-import Image from "next/image";
+import { AuthContext } from "../../context/AuthContext";
+import { auth } from "../../config/firebase";
 
 const formatter = buildFormatter(englishStrings);
 
 function Tweet({ tweet }) {
+  const { likeTweet } = useContext(AuthContext);
+
+  console.log(tweet);
+
   return (
     <div className="flex flex-col space-x-3 border-y p-5 border-gray-100 w-full">
       <div className="flex space-x-3 w-full">
@@ -51,8 +58,21 @@ function Tweet({ tweet }) {
           <ArrowsRightLeftIcon className="h-5 w-5" />
         </div> */}
 
-        <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
-          <HeartIcon className="h-5 w-5" />
+        <div
+          onClick={() => {
+            likeTweet(
+              tweet?.referenceId,
+              auth?.currentUser?.uid,
+              tweet?.referenceId
+            );
+          }}
+          className="flex cursor-pointer items-center space-x-3 text-gray-400"
+        >
+          {tweet.likes.includes(auth?.currentUser?.uid) ? (
+            <HeartSolid className="h-5 w-5 text-red-500" />
+          ) : (
+            <HeartIcon className="h-5 w-5" />
+          )}
           <p>{tweet?.likes?.length}</p>
         </div>
 
