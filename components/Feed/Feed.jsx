@@ -15,9 +15,7 @@ export default function Feed() {
 
       <div>
         {tweets.map((tweet) => (
-          <Link href={`/tweet/${tweet?.ownerId}`}>
-            <TweetComponent key={tweet._id} tweet={tweet} />
-          </Link>
+          <TweetComponent key={tweet._id} tweet={tweet} />
         ))}
       </div>
     </div>

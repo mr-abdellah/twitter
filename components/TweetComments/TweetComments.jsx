@@ -25,7 +25,7 @@ const TweetComments = ({ id }) => {
             <article className="p-6 mb-6 text-base bg-white rounded-lg dark:bg-gray-900">
               <footer className="flex justify-between items-center mb-2">
                 <div className="flex items-center">
-                  <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                  <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white truncate">
                     <img
                       className="mr-2 w-6 h-6 rounded-full"
                       src={owner?.profileImage}
@@ -33,7 +33,7 @@ const TweetComments = ({ id }) => {
                     />
                     {owner?.username}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
                     <time
                       pubdate
                       datetime="2022-02-08"
@@ -62,42 +62,6 @@ const TweetComments = ({ id }) => {
                   <span className="sr-only">Comment settings</span>
                 </button>
                 {/* <!-- Dropdown menu --> */}
-                <div
-                  id="dropdownComment1"
-                  className={`z-10 w-36 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 ${
-                    openEdit ? "flex" : "hidden"
-                  }`}
-                >
-                  <ul
-                    className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="dropdownMenuIconHorizontalButton"
-                  >
-                    <li>
-                      <a
-                        href="#"
-                        className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Edit
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Remove
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Report
-                      </a>
-                    </li>
-                  </ul>
-                </div>
               </footer>
               <p className="text-gray-500 dark:text-gray-400">{comment}</p>
               <div className="flex items-center mt-4 space-x-4">

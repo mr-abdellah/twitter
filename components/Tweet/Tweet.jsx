@@ -15,6 +15,7 @@ import { Avatar } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 import { auth } from "../../config/firebase";
 import AuthModal from "../../components/Auth";
+import Link from "next/link";
 
 const formatter = buildFormatter(englishStrings);
 
@@ -27,10 +28,10 @@ function Tweet({ tweet }) {
 
   return (
     <div className="flex flex-col space-x-3 border-y px-2 py-3 border-gray-100 w-full md:p-6">
-      <div className="flex flex-col w-full">
+      <Link href={`/tweet/${tweet?.ownerId}`} className="flex flex-col w-full">
         <div className="flex flex-row items-center space-x-1 w-full">
           {tweet?.owner?.profileImage ? (
-            <Avatar alt="Remy Sharp" src={tweet?.owner?.profileImage} />
+            <Avatar alt={tweet?.owner?.name} src={tweet?.owner?.profileImage} />
           ) : (
             <Avatar>{tweet?.owner?.name}</Avatar>
           )}
@@ -56,7 +57,7 @@ function Tweet({ tweet }) {
             />
           )}
         </div>
-      </div>
+      </Link>
       <div className="mt-5 flex justify-start space-x-3">
         <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
           <ChatBubbleLeftRightIcon className="h-5 w-5" />
