@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Wrapper from "../components/Wrapper";
 import Feed from "../components/Feed/Feed";
+import Navbar from "../components/Navbar/Navbar";
 
 const Home = ({ tweets }) => {
   return (
@@ -14,6 +15,7 @@ const Home = ({ tweets }) => {
       </Head>
 
       <Wrapper>
+        <Navbar />
         <Feed />
       </Wrapper>
     </div>

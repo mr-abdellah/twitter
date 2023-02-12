@@ -23,9 +23,9 @@ const Sidebar = () => {
   const { userToken, user, logout } = useContext(AuthContext);
 
   return (
-    <div className="flex flex-col col-span-2 items-center px-4 md:items-start h-full">
+    <div className="flex flex-row w-full justify-between absolute z-40 left-0 right-0 md:relative bg-white bottom-0 md:flex-col md:col-span-2 items-center px-4 md:items-start md:h-full md:justify-start">
       <img
-        className="h-10 w-10 m-3"
+        className="h-10 w-10 m-3 hidden md:flex"
         src="https://img.icons8.com/color/344/twitter.png"
         alt=""
       />
@@ -42,17 +42,30 @@ const Sidebar = () => {
           <SidebarRow Icon={HashtagIcon} title="Explore" />
           <SidebarRow Icon={BellIcon} title="Notifications" />
           <SidebarRow Icon={EnvelopeIcon} title="Messages" />
-          <SidebarRow Icon={BookmarkIcon} title="Bookmarks" />
-          <SidebarRow Icon={RectangleStackIcon} title="Lists" />
+          <SidebarRow
+            Icon={BookmarkIcon}
+            title="Bookmarks"
+            classname="hidden md:flex"
+          />
+          <SidebarRow
+            Icon={RectangleStackIcon}
+            title="Lists"
+            classname="hidden md:flex"
+          />
           <SidebarRow
             Icon={UserIcon}
             title="Account"
             // onclick={() => setProfileModal(!profileModal)}
             href="/profile"
+            classname="hidden md:flex"
           />
         </>
       )}
-      <SidebarRow Icon={EllipsisHorizontalCircleIcon} title="More" />
+      <SidebarRow
+        Icon={EllipsisHorizontalCircleIcon}
+        title="More"
+        classname="hidden md:flex"
+      />
       {userToken && (
         <SidebarRow
           Icon={ArrowLeftOnRectangleIcon}
@@ -62,8 +75,13 @@ const Sidebar = () => {
           }}
         />
       )}
-      <AuthModal openModal={openLoginModal} setOpenModal={setOpenLoginModal} />
-      <ProfileModal open={profileModal} setOpen={setProfileModal} />
+      <div className="absolute top-52">
+        <AuthModal
+          openModal={openLoginModal}
+          setOpenModal={setOpenLoginModal}
+        />
+        <ProfileModal open={profileModal} setOpen={setProfileModal} />
+      </div>
     </div>
   );
 };

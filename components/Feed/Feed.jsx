@@ -9,15 +9,13 @@ export default function Feed() {
   const { tweets } = useSelector((state) => state.tweets);
 
   return (
-    <div className="col-span-7 lg:col-span-5 lg:border-x h-screen overflow-scroll">
+    <div className="col-span-7 lg:col-span-5 lg:border-x h-screen overflow-scroll pt-16">
       <Header title="Home" />
       <TweetBox />
 
       <div>
         {tweets.map((tweet) => (
-          <Link href={`/tweet/${tweet?.ownerId}`}>
-            <TweetComponent key={tweet._id} tweet={tweet} />
-          </Link>
+          <TweetComponent key={tweet._id} tweet={tweet} />
         ))}
       </div>
     </div>
