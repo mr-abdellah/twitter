@@ -77,7 +77,7 @@ function Tweet({ tweet }) {
           }}
           className="flex cursor-pointer items-center space-x-3 text-gray-400"
         >
-          {tweet.likes.includes(auth?.currentUser?.uid) ? (
+          {tweet?.likes?.includes(auth?.currentUser?.uid) ? (
             <HeartSolid className="h-5 w-5 text-red-500" />
           ) : (
             <HeartIcon className="h-5 w-5" />

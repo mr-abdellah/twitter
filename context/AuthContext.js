@@ -264,6 +264,21 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const addCommentTweet = async (referenceId, comment) => {
+    getAllTweets();
+    const tweetReference = doc(db, "tweets", referenceId);
+    try {
+      await updateDoc(tweetReference, {
+        comments: arrayUnion(comment),
+      })
+        .then(() => {
+          console.log("comment added succefully !");
+          getAllTweets();
+        })
+        .catch(() => console.log("error while adding comment"));
+    } catch (error) {}
+  };
+
   useEffect(() => {
     getUserCollection();
   }, [userToken]);
@@ -304,6 +319,7 @@ const AuthProvider = ({ children }) => {
         updateUserCollection,
         getAllTweets,
         likeTweet,
+        addCommentTweet,
       }}
     >
       {children}
