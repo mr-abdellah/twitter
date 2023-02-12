@@ -3,9 +3,8 @@ import Wrapper from "../components/Wrapper";
 import Feed from "../components/Feed/Feed";
 
 const Home = ({ tweets }) => {
-
   return (
-    <div className="mx-auto  lg:max-w-6xl h-screen">
+    <div className="mx-auto lg:max-w-6xl h-full">
       <Head>
         <title>Twitter</title>
         <link
