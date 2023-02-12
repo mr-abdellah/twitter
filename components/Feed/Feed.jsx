@@ -9,7 +9,7 @@ export default function Feed() {
   const { tweets } = useSelector((state) => state.tweets);
 
   return (
-    <div className="col-span-7 lg:col-span-5 lg:border-x h-screen overflow-scroll">
+    <div className="col-span-7 lg:col-span-5 lg:border-x h-screen overflow-scroll pt-16">
       <Header title="Home" />
       <TweetBox />
 
