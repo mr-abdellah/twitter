@@ -4,7 +4,7 @@ import Profile from "../components/Profile";
 
 const Home = () => {
   return (
-    <div className="mx-auto  lg:max-w-6xl h-screen">
+    <div className="mx-auto lg:max-w-6xl h-full">
       <Head>
         <title>Twitter Profile</title>
         <link

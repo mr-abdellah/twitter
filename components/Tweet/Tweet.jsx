@@ -6,7 +6,7 @@ import {
   ArrowUpTrayIcon,
 } from "@heroicons/react/24/outline";
 
-import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
+import { HeartIcon as HeartSolid, TrashIcon } from "@heroicons/react/24/solid";
 import TimeAgo from "react-timeago";
 import englishStrings from "react-timeago/lib/language-strings/en";
 import buildFormatter from "react-timeago/lib/formatters/buildFormatter";
@@ -16,15 +16,16 @@ import { AuthContext } from "../../context/AuthContext";
 import { auth } from "../../config/firebase";
 import AuthModal from "../../components/Auth";
 import Link from "next/link";
+import handleDeleteTweet from "../../utils/DeleteTweet/DeleteTweet";
 
 const formatter = buildFormatter(englishStrings);
 
 function Tweet({ tweet }) {
-  const { likeTweet, userToken } = useContext(AuthContext);
+  const { likeTweet, userToken, getAllTweets } = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
 
-  // console.log(tweet);
+  // console.log(tweet?.referenceId);
 
   return (
     <div className="flex flex-col space-x-3 border-y px-2 py-3 border-gray-100 w-full md:p-6">
@@ -63,9 +64,7 @@ function Tweet({ tweet }) {
           <ChatBubbleLeftRightIcon className="h-5 w-5" />
           <p>{tweet?.comments?.length}</p>
         </div>
-        {/* <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
-          <ArrowsRightLeftIcon className="h-5 w-5" />
-        </div> */}
+
         <div
           onClick={() => {
             userToken
@@ -85,10 +84,20 @@ function Tweet({ tweet }) {
           )}
           <p>{tweet?.likes?.length}</p>
         </div>
+
+        {tweet?.ownerId === auth?.currentUser?.uid && (
+          <button
+            type="button"
+            className="flex cursor-pointer items-center space-x-3 text-gray-400"
+            onClick={() => {
+              handleDeleteTweet(tweet?.referenceId);
+              getAllTweets();
+            }}
+          >
+            <TrashIcon className="h-5 w-5 hover:text-red-600" />
+          </button>
+        )}
         <AuthModal openModal={open} setOpenModal={setOpen} />
-        {/* <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
-          <ArrowUpTrayIcon className="h-5 w-5" />
-        </div> */}
       </div>
     </div>
   );

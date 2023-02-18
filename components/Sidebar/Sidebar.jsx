@@ -22,6 +22,23 @@ const Sidebar = () => {
 
   const { userToken, user, logout } = useContext(AuthContext);
 
+  const array = [
+    {
+      name: "Abdellah",
+      age: 19,
+    },
+    {
+      name: "Vladimir",
+      age: 20,
+    },
+    {
+      name: "Vicky",
+      age: 99,
+    },
+  ];
+
+  console.log(array.filter((item) => item.age === 99));
+
   return (
     <div className="flex flex-row w-full justify-between absolute z-40 left-0 right-0 md:relative bg-white bottom-0 md:flex-col md:col-span-2 items-center px-4 md:items-start md:h-full md:justify-start">
       <img
@@ -39,7 +56,11 @@ const Sidebar = () => {
       ) : (
         <>
           <SidebarRow Icon={HomeIcon} title="Home" />
-          <SidebarRow Icon={HashtagIcon} title="Explore" />
+          <SidebarRow
+            Icon={HashtagIcon}
+            title="Explore"
+            classname="hidden md:flex"
+          />
           <SidebarRow Icon={BellIcon} title="Notifications" />
           <SidebarRow Icon={EnvelopeIcon} title="Messages" />
           <SidebarRow
@@ -57,7 +78,6 @@ const Sidebar = () => {
             title="Account"
             // onclick={() => setProfileModal(!profileModal)}
             href="/profile"
-            classname="hidden md:flex"
           />
         </>
       )}
