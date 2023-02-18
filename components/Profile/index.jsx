@@ -10,7 +10,7 @@ const Profile = () => {
   console.log("user data : ", user);
 
   return (
-    <div className="col-span-7 lg:col-span-5 lg:border-x relative">
+    <div className="col-span-7 lg:col-span-5 lg:border-x relative h-screen">
       <div className="sticky flex items-center justify-between h-10 overflow-hidden text-ellipsis mt-2 md:mx-3">
         <Link href="/" className="h-4 w-[25%]  md:h-8 md:w-8 cursor-pointer">
           <ArrowLeftIcon className="w-full h-full" />

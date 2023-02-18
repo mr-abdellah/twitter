@@ -5,9 +5,9 @@ import { auth } from "../../config/firebase";
 import moment from "moment";
 
 const CommentBox = ({ tweet }) => {
-  const { addCommentTweet, user } = useContext(AuthContext);
+  const { addCommentTweet, user, getAllTweets } = useContext(AuthContext);
   const [sharing, setSharing] = useState(false);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState(null);
 
   const handleShareComment = async (desc, user) => {
     try {
@@ -24,7 +24,8 @@ const CommentBox = ({ tweet }) => {
         likes: [],
       };
       await addCommentTweet(tweet?.referenceId, comment);
-      setComment(null);
+      await getAllTweets();
+      setComment("");
       setSharing(false);
     } catch (error) {
       setSharing(false);
@@ -35,12 +36,12 @@ const CommentBox = ({ tweet }) => {
   return (
     <>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
+        <h2 className="text-lg lg:text-2xl font-bold text-gray-900">
           Discussion ({tweet?.comments?.length})
         </h2>
       </div>
       <div className="mb-6">
-        <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 ">
           <label for="comment" className="sr-only">
             Your comment
           </label>
@@ -48,7 +49,7 @@ const CommentBox = ({ tweet }) => {
             type="text"
             id="comment"
             rows="3"
-            className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+            className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none"
             placeholder="Write a comment..."
             required
             onChange={(e) => setComment(e.target.value)}

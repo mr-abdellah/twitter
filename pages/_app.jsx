@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
 import store from "../redux/store";
+import { CheckIcon } from "@heroicons/react/24/outline";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -20,6 +21,10 @@ function MyApp({ Component, pageProps }) {
           draggable
           pauseOnHover
           theme="light"
+          progressStyle={{
+            backgroundColor: "#00ADED",
+          }}
+          icon={() => <CheckIcon className="text-twitter" />}
         />
         <Component {...pageProps} />
       </AuthProvider>

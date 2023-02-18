@@ -24,6 +24,7 @@ import toastAlert from "../utils/Notification";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { addTweets } from "../redux/slices/tweets";
+import { CheckIcon } from "@heroicons/react/24/outline";
 
 export const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
@@ -279,6 +280,63 @@ const AuthProvider = ({ children }) => {
     } catch (error) {}
   };
 
+  const updateCommentTweet = async (referenceId, comment) => {
+    getAllTweets();
+    const tweetReference = doc(db, "tweets", referenceId);
+    try {
+      await updateDoc(tweetReference, {
+        comments: arrayUnion({ comment }),
+      })
+        .then(() => {
+          console.log("comment added succefully !");
+          getAllTweets();
+        })
+        .catch(() => console.log("error while adding comment"));
+    } catch (error) {}
+  };
+
+  const removeCommentTweet = async (referenceId, comment) => {
+    getAllTweets();
+
+    const id = toast.loading("deleting comment...");
+
+    const tweetReference = doc(db, "tweets", referenceId);
+    try {
+      await updateDoc(tweetReference, {
+        comments: arrayRemove(comment),
+      })
+        .then(() => {
+          console.log("comment removed succefully !");
+          toast.update(id, {
+            render: `Error while deleting Tweet : ${error.message}`,
+            type: "error",
+            isLoading: false,
+            autoClose: true,
+            closeOnClick: true,
+            progressStyle: { backgroundColor: "#ed420e" },
+            icon: <CheckIcon className="text-red-600" />,
+          });
+          getAllTweets();
+        })
+        .finally(() => {
+          toast.update(id, {
+            render: "You have deleted your comment successfully",
+            type: "success",
+            isLoading: false,
+            autoClose: true,
+            closeOnClick: true,
+            progressStyle: { backgroundColor: "#00ADED" },
+            icon: <CheckIcon className="text-twitter" />,
+          });
+        })
+        .catch(() => {
+          console.log("error while removing comment : ", error);
+        });
+    } catch (error) {
+      console.log("error while removing comment : ", error);
+    }
+  };
+
   useEffect(() => {
     getUserCollection();
   }, [userToken]);
@@ -320,6 +378,8 @@ const AuthProvider = ({ children }) => {
         getAllTweets,
         likeTweet,
         addCommentTweet,
+        removeCommentTweet,
+        updateCommentTweet,
       }}
     >
       {children}
